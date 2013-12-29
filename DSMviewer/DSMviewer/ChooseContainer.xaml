@@ -1,0 +1,21 @@
+﻿<Window x:Class="DSMviewer.ChooseContainer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="" Height="120" Width="150">
+    
+    <DockPanel Width="130">
+ 
+        <TextBlock Text="Choose feeder to display"
+                   DockPanel.Dock="Top"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"/>
+        <ComboBox DockPanel.Dock="Top" IsEditable="False" 
+                  ItemsSource="{Binding}"
+                  SelectionChanged="selectLine"/>
+        <Button DockPanel.Dock="Bottom" 
+                Content="Select" Click="chooseLine"/>
+        
+            
+        
+    </DockPanel>
+</Window>
