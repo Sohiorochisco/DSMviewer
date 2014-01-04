@@ -30,17 +30,15 @@ namespace DSMviewer
             AreaViewHeight = mapViewHeight;
             AreaViewWidth = mapViewWidth;
             determineRanges();
-            MapIconHeight = 10;
-            MapIconWidth = 10;
             iconPNGpaths = new Dictionary<string, string>();
-            iconPNGpaths["Conductor"] = "..\\icons\\lineseg.png";
-            iconPNGpaths["Transformer"] = "..\\icons\\transformer.png";
-            iconPNGpaths["ConnectedBus"] = "..\\icons\\connectedbus.png";
-            iconPNGpaths["Bus"] = "..\\icons\\bus.png";
-            iconPNGpaths["NoConnectionBus"] = "..\\icons\\noconnectionbus.png";
-            iconPNGpaths["OpenSwitch"] = "..\\icons\\openswitch.png";
-            iconPNGpaths["ClosedSwitch"] = "..\\icons\\closedswitch.png";
-            iconPNGpaths["Load"] = "..\\icons\\load.png";
+            iconPNGpaths["Conductor"] = "..\\..\\..\\..\\icons\\lineseg.png";
+            iconPNGpaths["Transformer"] = "..\\..\\..\\..\\icons\\transformer.png";
+            iconPNGpaths["ConnectedBus"] = "..\\..\\..\\..\\icons\\connectedbus.png";
+            iconPNGpaths["Bus"] = "..\\..\\..\\..\\icons\\bus.png";
+            iconPNGpaths["NoConnectionBus"] = "..\\..\\..\\..\\icons\\noconnectionbus.png";
+            iconPNGpaths["OpenSwitch"] = "..\\..\\..\\..\\icons\\openswitch.png";
+            iconPNGpaths["ClosedSwitch"] = "..\\..\\..\\..\\icons\\closedswitch.png";
+            iconPNGpaths["Load"] = "..\\..\\..\\..\\icons\\load.png";
             
         }
         public static ViewHelper LoadModel(string datasourcePath,double mapheight,double mapwidth)
@@ -62,15 +60,21 @@ namespace DSMviewer
         /// </summary>
         /// <param name="areaPoints"></param>
         /// <returns></returns>
-        internal  string GoogleMapsURL()
+        internal  BitmapImage GoogleMapsURL()
         {
             //Using https to avoid security issues/ warnings from Windows
             var urlBuilder = new StringBuilder("https://maps.googleapis.com/maps/api/staticmap?");
             urlBuilder.AppendFormat("center={0},{1}", centerYmap.ToString(), centerXmap.ToString());
             urlBuilder.AppendFormat("&zoom={0}", zoom.ToString());
             urlBuilder.Append("&size=512x512&scale=1&sensor=false");
-            return urlBuilder.ToString();
+            BackgroundMap = new BitmapImage(new Uri(urlBuilder.ToString(),UriKind.Absolute));
+            return BackgroundMap;
         }
+        internal BitmapImage BackgroundMap{get;private set;}
+        /// <summary>
+        /// Returns a string giving the name for each location in the associated SubGeographicalRegion
+        /// </summary>
+        /// <returns></returns>
         internal IEnumerable<string> LocationNames()
         {
             var names = new HashSet<string>();
@@ -106,59 +110,49 @@ namespace DSMviewer
         }
 
         /// <summary>
-        /// Returns the icons, x and y coordinates for each of the Location icons to be shown over the map.
+        /// Updates the collection of Location definition objects to be displayed in the area view
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<Ellipse> LocationOverlays()
+        internal LocationDisplays LocationOverlays()
         {
-            var iconDefs = new HashSet<Ellipse>();
-            Ellipse icon;
+            var iconDefs = new LocationDisplays();
+            LocationDef icon;
             double xcoord;
             double ycoord;
-            ToolTip tt;
             foreach( Location location in region.Locations.Values)
             {
-                icon = new Ellipse();
-                icon.Height = MapIconHeight;
-                icon.Width = MapIconWidth;
-                icon.Visibility = Visibility.Visible;
-                icon.Stretch = System.Windows.Media.Stretch.None;
-                icon.Opacity = 1.0;
-                //Defines a tooltip to display the name of the location during mouseover
-                tt = new ToolTip();
-                tt.Content = String.Format("Location {0}", location.Name);
-                tt.PlacementTarget = icon;
-                tt.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
-                icon.ToolTip = tt;
 
+                icon = new LocationDef();            
+                icon.Description = String.Format("Location {0}", location.Name);
+                
                 //set icon coordinates for map display
                 var coords = scaleToView(location.Position.XPosition, location.Position.YPosition);
                 xcoord = coords.Key;
                 ycoord = coords.Value;
-                Canvas.SetLeft(icon, xcoord);
-                Canvas.SetTop(icon, ycoord);
+                icon.X = xcoord;
+                icon.Y = ycoord;
                 iconDefs.Add(icon);               
             }
             return iconDefs;            
         }
+        internal LocationDisplays LocationDefs { get; private set; }
 
         
-        internal IEnumerable<System.Windows.Shapes.Line> LineOverlays(string containerName)
+        internal LineDisplays LineOverlays(string containerName)
         {
             var container = containers[containerName];
-            var lines = new HashSet<System.Windows.Shapes.Line>();
-            System.Windows.Shapes.Line displayLine;
+            var lines = new LineDisplays();
+            LineDef displayLine;
             PositionPoint point1, point2;
             Conductor conductor;
             KeyValuePair<double,double> p1coords;
             KeyValuePair<double,double> p2coords;
-            ToolTip tt;
             foreach(Equipment equipment in container.Where(x => x.EquipmentType == EquipmentTopoTypes.Conductor))
             {
                 conductor = equipment as Conductor;
                 if (conductor != null)
                 {
-                    displayLine = new System.Windows.Shapes.Line();
+                    displayLine = new LineDef();
                     point1 = conductor.Terminal1.Location.Position;
                     point2 = conductor.Terminal2.Location.Position;
                     p1coords = scaleToView(point1.XPosition, point1.YPosition);
@@ -167,18 +161,14 @@ namespace DSMviewer
                     displayLine.X2 = p2coords.Key;
                     displayLine.Y1 = p1coords.Value;
                     displayLine.Y2 = p2coords.Value;
-                    tt = new ToolTip();
-                    tt.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
-                    tt.Content = String.Format("Line Segment {0}", conductor.Name);
-                    displayLine.ToolTip = tt;
+                    displayLine.Description = String.Format("Line Segment {0}", conductor.Name); 
                     lines.Add(displayLine);
                 }
 
             }
-
             return lines;
         }
-
+        internal LineDisplays LineDefs { get; private set; }
         internal double AreaViewHeight{set;private get;}
         internal double AreaViewWidth{set; private get;}
         internal double MapIconHeight {private get; set;}

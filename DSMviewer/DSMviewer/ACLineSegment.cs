@@ -12,7 +12,7 @@ namespace IdentifiedObjects
         /// <summary>
         /// lists all defined models for ACLineSegments
         /// </summary>
-        public static Dictionary<string,LineModel> LineModels;
+        internal static Dictionary<string, LineModel> LineModels { get; private set; }
         static ACLineSegment(){LineModels = new Dictionary<string, LineModel>();}
 
         protected string lineModelname;

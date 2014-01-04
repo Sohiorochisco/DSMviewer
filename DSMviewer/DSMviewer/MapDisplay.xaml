@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="DSMviewer.MapDisplay"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate x:Key="LineOverlays">
+            <Line
+                ToolTip="{Binding Path=Description}"
+                X1="{Binding Path=X1}"
+                X2="{Binding Path=X2}"
+                Y1="{Binding Path=Y1}"
+                Y2="{Binding Path=Y2}"
+                Stroke="Aquamarine"
+                StrokeThickness="5"/>
+        </DataTemplate>
+        <DataTemplate x:Key="LocationOverlays">
+            <Ellipse
+                ToolTip="{Binding Path=Description}"
+                Width="8" Height="8"
+                Fill="BlanchedAlmond" Stroke="Black"
+                StrokeThickness="1"
+                Canvas.Left="{Binding Path=X}"
+                Canvas.Top="{Binding Path=Y}"/>
+        </DataTemplate>
+        <Style TargetType="ItemsControl">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>            
+        </Style>
+    </UserControl.Resources>
+        <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Image Source="{Binding BackgroundMap}"/>
+        <ItemsControl
+                ItemsSource="{Binding LocationDefs}"
+                ItemTemplate="{StaticResource LocationOverlays}"/>
+            <ItemsControl
+                ItemsSource="{Binding LineDefs}"
+                ItemTemplate="{StaticResource LineOverlays}"/>
+        </Canvas>
+</UserControl>

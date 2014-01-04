@@ -19,15 +19,20 @@ namespace DSMviewer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ViewHelper helper;
+        internal ViewHelper helper;
                         
         public MainWindow()
         {
             InitializeComponent();
+            ImageBrush background = new ImageBrush();
+            background.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\icons\defaultbackground.png",UriKind.Relative));
+            this.Background = background;
             mapWidth = 525;
             mapHeight = 525;
-
         }
+        public BitmapImage BackgroundMap { get; private set; }
+        public LocationDisplays LocationDefs { get; private set; }
+        public LineDisplays LineDefs { get; private set; }
         private double mapWidth;
         private double mapHeight;
         private void ChooseFile(object sender, RoutedEventArgs e)
@@ -42,43 +47,24 @@ namespace DSMviewer
             }
                                           
         }
-
+        /// <summary>
+        /// Updates fields necessary to build the canvas display of the lines and locations over the map.
+        /// </summary>
+        /// <param name="filepath"></param>
         private void makeCanvas(string filepath)
         {
             helper = ViewHelper.LoadModel(filepath, mapHeight, mapWidth);
             var chooseFeeder = new ChooseContainer(helper.ContainerNames());
             var feederselected = chooseFeeder.ShowDialog();
-            IEnumerable<Line> powerlines;
             if (feederselected == true)
             {
-                powerlines = helper.LineOverlays(chooseFeeder.SelectedLine);
+                this.LineDefs = helper.LineOverlays(chooseFeeder.SelectedLine);
             }
-            else
-            {
-                powerlines = null;
-            }
-            var locationDisplays = helper.LocationOverlays();
-            Image map = new Image();
-            map.Source = new BitmapImage(new Uri(helper.GoogleMapsURL(), UriKind.Absolute));
-            var mapView = new Canvas();
-            mapView.Children.Add(map);
-            foreach (Ellipse ellipse in locationDisplays)
-            {
-                ellipse.Stroke = new SolidColorBrush(new Color { G = 250, B = 50, R = 100 });
-                ellipse.StrokeThickness = 3;
-                ellipse.Fill = new SolidColorBrush(new Color { G = 100, B = 100, R = 10 });
-                ellipse.IsEnabled = true;
-                mapView.Children.Add(ellipse);
-            }
-            foreach (Line line in powerlines)
-            {
-                line.Stroke = new SolidColorBrush(new Color { B = 240,G = 240});
-                line.StrokeThickness = 6;
-                line.IsEnabled = true;
-                mapView.Children.Add(line);
-            }
-            Grid.SetRow(mapView, 1);
-            this.areaViewLayout.Children.Add(mapView);
+            this.LocationDefs = helper.LocationOverlays();
+            this.BackgroundMap = helper.GoogleMapsURL();
+            var mapdisplay = new MapDisplay(this);
+            MainDisplay.Content = mapdisplay;
+            
         }
     }
 }
