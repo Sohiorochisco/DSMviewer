@@ -13,17 +13,16 @@
                 X2="{Binding Path=X2}"
                 Y1="{Binding Path=Y1}"
                 Y2="{Binding Path=Y2}"
-                Stroke="Aquamarine"
-                StrokeThickness="5"/>
+                Stroke="Aqua"
+                StrokeThickness="2"/>
         </DataTemplate>
         <DataTemplate x:Key="LocationOverlays">
             <Ellipse
                 ToolTip="{Binding Path=Description}"
-                Width="8" Height="8"
+                Width="12" Height="12"
                 Fill="BlanchedAlmond" Stroke="Black"
                 StrokeThickness="1"
-                Canvas.Left="{Binding Path=X}"
-                Canvas.Top="{Binding Path=Y}"/>
+                MouseLeftButtonUp="OpenLocationView"/>
         </DataTemplate>
         <Style TargetType="ItemsControl">
             <Setter Property="ItemsPanel">
@@ -35,13 +34,20 @@
             </Setter>            
         </Style>
     </UserControl.Resources>
-        <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <Image Source="{Binding BackgroundMap}"/>
-        <ItemsControl
-                ItemsSource="{Binding LocationDefs}"
-                ItemTemplate="{StaticResource LocationOverlays}"/>
+        <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Left">
+            <Image Source="{Binding BackgroundMap}"/>
             <ItemsControl
                 ItemsSource="{Binding LineDefs}"
                 ItemTemplate="{StaticResource LineOverlays}"/>
+                <ItemsControl
+                    ItemsSource="{Binding LocationDefs}"
+                    ItemTemplate="{StaticResource LocationOverlays}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
         </Canvas>
 </UserControl>

@@ -16,6 +16,12 @@ namespace IdentifiedObjects
 
         public SwitchState SwitchState { get; set; }
 
+        //For switches, this is either "open" or "closed"
+        internal override string State()
+        {
+            return SwitchState.ToString();
+        }
+
 
         
         public Switch(DataRow switchData)

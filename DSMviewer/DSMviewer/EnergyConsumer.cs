@@ -36,7 +36,14 @@ namespace IdentifiedObjects
         {
             return new Complex(Pnominal, Qnominal);
         }
-
+        /// <summary>
+        /// Currently no state for loads; may change in the future
+        /// </summary>
+        /// <returns></returns>
+        internal override string State()
+        {
+            return "";
+        }
         public Complex[] Currents(Complex[] voltages,float baseKV)
         {
             var currents = new Complex[3];
@@ -64,20 +71,24 @@ namespace IdentifiedObjects
             var ConsI = LoadResponse.PConstantCurrent * obsPower;
 
             var IconsS = Complex.Conjugate(Complex.Divide(ConsS, voltage));
-            Complex IconsZ;
+            Complex IConsZ;
             if (ConsZ != Complex.Zero)
             {
-                IconsZ = ((baseKV * baseKV) / Complex.Conjugate(ConsZ)) * voltage;
+                IConsZ = ((baseKV * baseKV) / Complex.Conjugate(ConsZ)) * voltage;
             }
             else 
             {
-                IconsZ = Complex.Zero;
+                IConsZ = Complex.Zero;
             }
-            var IconsI = Complex.Conjugate(ConsI / baseKV);
+            var IConsI = Complex.Conjugate(ConsI / baseKV);
 
-            return IconsI + IconsS + IconsZ;             
+            return IConsI + IconsS + IConsZ;             
         }
         public DateTime LastUpdateTime { get; internal set; }
+
+
+
+        internal static void ClearLoadModels() {loadModels.Clear(); }
 
         /// <summary>
         /// used to create a new instance of LoadResponseCharacteristic

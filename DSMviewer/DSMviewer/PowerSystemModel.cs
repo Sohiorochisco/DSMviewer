@@ -100,6 +100,9 @@ namespace IdentifiedObjects
             }
             protected override void constructAndConnect(Dictionary<string,DataTable> typesToBuild)
             {
+                ACLineSegment.LineModels.Clear();
+                EnergyConsumer.ClearLoadModels();
+
                 //Add all lineModels to the ACLineSegment type
                 foreach (DataRow row in typesToBuild["LineModel"].Rows)
                 {

@@ -15,9 +15,15 @@ namespace IdentifiedObjects
         //Indicates whether given type or instance contains other equipment, usually false
         public bool Aggregate { get; protected set; }
 
+        /// <summary>
+        /// A string uniquely identifying each possible state of each equipment item
+        /// </summary>
+        /// <returns></returns>
+        internal abstract string State();
         protected EquipmentTopoTypes equipmentType;
         /// <summary>
-        /// Used only by ConductingEquipment, but kept at Equipment level in order to select from EquipmentContainers. For non-conducting equipment set to "None"
+        /// Used only by ConductingEquipment, but kept at Equipment level
+        /// in order to select from EquipmentContainers. For non-conducting equipment set to "None"
         /// </summary>
         public EquipmentTopoTypes EquipmentType
         {

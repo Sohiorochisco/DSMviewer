@@ -41,6 +41,10 @@ namespace IdentifiedObjects
             return terms;
         }
 
+        internal override string State()
+        {
+            return "";
+        }
 
         /// <summary>
         /// Returns the percentage reactance between the two coils
@@ -114,6 +118,11 @@ namespace IdentifiedObjects
             public float G0 { get { return g0; } }
 
             public float BaseKV { get; private set; }
+
+            internal override string State()
+            {
+                return "";
+            }
 
 
             public float Rpercentage()

@@ -18,37 +18,12 @@ namespace DSMviewer
     /// <summary>
     /// Interaction logic for LocationDisplay.xaml
     /// </summary>
-    public partial class LocationDisplay : Page
+    public partial class LocationDisplay : UserControl
     {
-        internal LocationDisplay(ViewHelper thisHelper,Location location)
+        public LocationDisplay(SchematicMaker sm)
         {
-            helper = thisHelper;
-            locationIconGrid = new Grid();
-            makeGridPattern();
-            helper.BuildLocationView(location, setLocationIcons);
+            DataContext = sm;
             InitializeComponent();
         }
-
-        private bool setLocationIcons(int column, int row, System.Windows.Controls.Image image)
-        {
-            Grid.SetRow(image, row);
-            Grid.SetColumn(image, column);
-            locationIconGrid.Children.Add(image);
-            return true;
-        }
-        private void makeGridPattern()
-        {
-            for (int x = 0; x < 16; x++)
-            {
-                locationIconGrid.RowDefinitions.Add(new RowDefinition());
-            }
-            for (int y = 0; y < 16; y++)
-            {
-                locationIconGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            }
-        }
-
-        ViewHelper helper;
-        Grid locationIconGrid;
     }
 }

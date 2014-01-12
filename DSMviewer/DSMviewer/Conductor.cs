@@ -11,7 +11,15 @@ namespace IdentifiedObjects
     /// </summary>
     public abstract class Conductor : ConductingEquipment
     {
-        
+        /// <summary>
+        /// Currently, no state for conductors. Will probably be replaced with a state indicating
+        /// whether the line is overloaded
+        /// </summary>
+        /// <returns></returns>
+        internal override string State()
+        {
+            return "";
+        } 
         public string Term2Name{get;set;}
         /// <summary>
         /// LoopMember indicates whether the conductor is part of a loop in the system topology.

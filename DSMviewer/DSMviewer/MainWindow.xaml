@@ -18,9 +18,17 @@
             </MenuItem>
             <MenuItem Header="View"/>
         </Menu>
-        <ContentControl
-            Name="MainDisplay" Grid.Row="1"/>
-               
+        <Grid Name="Docker" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            <ContentControl
+                Name="MainDisplay" Grid.Column="0"/>
+            <ContentControl
+                Name="SideDisplay" Grid.Column="1"/>
+        </Grid>
+
     </Grid>
 </Window>
     

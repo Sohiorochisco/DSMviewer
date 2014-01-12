@@ -15,5 +15,9 @@ namespace IdentifiedObjects
         {
             phases = (PhaseCode)regData["Phases"];
         }
+        internal override string State()
+        {
+            return "";
+        }
     }
 }

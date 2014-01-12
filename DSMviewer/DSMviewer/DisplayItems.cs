@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Imaging;
+using IdentifiedObjects;
 
 namespace DSMviewer
 {
@@ -25,10 +27,17 @@ namespace DSMviewer
         public double X { get; set; }
         public double Y { get; set; }
         public string Description { get; set; }
+        public Location BackingLocation { get; set; }
     }
     public class LocationDisplays : ObservableCollection<LocationDef>
     { }
     public class LineDisplays : ObservableCollection<LineDef>
     { }
 
+    public class LocationIcon
+    {
+        public string Description { get; set; }
+        public BitmapImage Icon { get; set; }
+        public IdentifiedObject BackingObject { get; set; }
+    }
 }

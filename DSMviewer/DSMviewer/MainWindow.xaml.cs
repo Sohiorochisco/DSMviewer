@@ -66,5 +66,10 @@ namespace DSMviewer
             MainDisplay.Content = mapdisplay;
             
         }
+
+        public void AddDock(UserControl control)
+        {
+            SideDisplay.Content = control;
+        }
     }
 }

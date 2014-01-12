@@ -24,5 +24,15 @@ namespace DSMviewer
             InitializeComponent();
             DataContext = mainWindow;
         }
+
+        private void OpenLocationView(object sender, MouseButtonEventArgs e)
+        {
+            var locIcon = (Ellipse)sender;
+            var location = (LocationDef)locIcon.DataContext;
+            var maker = new SchematicMaker(location.BackingLocation, 15, 15);
+            var locDisplay = new LocationDisplay(maker);
+            MainWindow parent = (MainWindow)Window.GetWindow(this);
+            parent.AddDock(locDisplay);
+        }
     }
 }
