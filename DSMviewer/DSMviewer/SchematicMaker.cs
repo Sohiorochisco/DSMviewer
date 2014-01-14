@@ -40,6 +40,8 @@ namespace DSMviewer
         public BindingList<LocationIcon> IconList{private set; get;}
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public int GridWidth { get { return 50 * Width - 1; } }
+        public int GridWidthMax { get { return 50 * Width + 5; } }
 
         /// <summary>
         /// Generates the backing collection for the location view.
@@ -96,12 +98,13 @@ namespace DSMviewer
                             //Not quicksort, but the numbers here are so small that this is quicker.
                             Terminal t2 = getMatch(cns, kvp.Key);
                             numUsed[rw] = fillInConnection(kvp.Key, t2, kvp.Value, icns, rw, refs);
-                            used = true; 
+                            used = true;
+                            rw++;
                         }
                     }
                 }
                 //Then fill in all of the single-terminal equipment using the remaining space.
-                foreach (KeyValuePair<Terminal, Equipment> kv in sns){
+                foreach (KeyValuePair<Terminal, Equipment> kv in sns.Where(x => nodeColumns[x.Key.ConnectionPoint] == cnum)){
                     bool used = false;
                     while (used == false){
                         if (numUsed[rw] > cnum){
@@ -175,7 +178,7 @@ namespace DSMviewer
         /// <param name="t"></param>
         /// <returns></returns>
         Terminal getMatch(Dictionary<Terminal, Equipment> umts, Terminal t){
-            Equipment pe = t.ParentEquipment;
+            Equipment pe = getParentEquipment(t).Key;
             umts.Remove(t);
             var kv = umts.Single(x => Equals(x.Value, pe));
             umts.Remove(kv.Key);
@@ -248,19 +251,20 @@ namespace DSMviewer
             private static IconGetter instance = new IconGetter();
             static IconGetter() { }
             private IconGetter() { 
-                icons = new Dictionary<string, BitmapImage>();
+                icons = new Dictionary<string,Uri>();
             }
-            private Dictionary<string, BitmapImage> icons;
+            private Dictionary<string, Uri> icons;
             public static IconGetter Instance { get { return instance; } }
 
             public void AddIcon(string iconName){
                 if(!icons.ContainsKey(iconName)){
-                    var iconUri = String.Format("..\\..\\..\\..\\.icons\\{0}.png", iconName);
-                    icons[iconName] = new BitmapImage(new Uri(@iconUri, UriKind.Relative));
+                    var iconUri = String.Format("..\\..\\..\\..\\icons\\{0}.png", iconName);
+                    var iconAbsUri = System.IO.Path.GetFullPath(iconUri);
+                    icons[iconName] = new Uri(@iconAbsUri, UriKind.Absolute);
                 }
                 return;
             }
-            public BitmapImage RetrieveIcon(string iconName){
+            public Uri RetrieveIcon(string iconName){
                 return icons[iconName];
             }
 

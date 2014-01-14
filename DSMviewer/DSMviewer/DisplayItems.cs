@@ -37,7 +37,7 @@ namespace DSMviewer
     public class LocationIcon
     {
         public string Description { get; set; }
-        public BitmapImage Icon { get; set; }
+        public Uri Icon { get; set; }
         public IdentifiedObject BackingObject { get; set; }
     }
 }

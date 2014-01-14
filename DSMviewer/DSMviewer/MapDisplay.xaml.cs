@@ -25,14 +25,35 @@ namespace DSMviewer
             DataContext = mainWindow;
         }
 
-        private void OpenLocationView(object sender, MouseButtonEventArgs e)
-        {
+        private void OpenLocationView(object sender, MouseButtonEventArgs e){
             var locIcon = (Ellipse)sender;
             var location = (LocationDef)locIcon.DataContext;
             var maker = new SchematicMaker(location.BackingLocation, 15, 15);
             var locDisplay = new LocationDisplay(maker);
-            MainWindow parent = (MainWindow)Window.GetWindow(this);
-            parent.AddDock(locDisplay);
+            //Display the LocationDisplay in its own window
+            Window extLocationDisplay = new Window(){
+                Title = location.Description,
+                Content = locDisplay
+            };
+
+            //For debug only 
+            //Image testImage = new Image();
+            //testImage.Source = new BitmapImage(maker.IconList[0].Icon);
+            //Window testImageDisplay = new Window(){
+            //    Title = "Test Image",
+            //    Content = testImage
+            //};
+            //testImageDisplay.Show();
+            locDisplay.IsEnabled = true;
+            extLocationDisplay.Show();
+
+
+            /*This should display the LocationDisplay control alongside the MapDisplay, but
+             for some reason the LocationDisplay control is never visible, and the vshost seems
+             to crash when this is attempted*/
+
+            //MainWindow parent = (MainWindow)Window.GetWindow(this);
+            //parent.AddDock(locDisplay);
         }
     }
 }

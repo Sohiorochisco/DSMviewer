@@ -5,20 +5,28 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300" >
+    <ScrollViewer HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
     <ItemsControl ItemsSource="{Binding IconList}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Image Source="{Binding Icon}"
-                    ToolTip="{Binding Description}"/>
+                <Image ToolTip="{Binding Description}" Width="50">
+                    <Image.Source>
+                        <BitmapImage UriSource="{Binding Icon}" 
+                                     DecodePixelWidth="50"/>
+                    </Image.Source>
+                </Image>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <UniformGrid
-                     IsItemsHost="True" Rows="{Binding Height}" Columns="{Binding Width}"/>
+                    MinWidth="{Binding GridWidth}"
+                    IsItemsHost="True" Rows="{Binding Height}" 
+                    Columns="{Binding Width}"/>
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
     </ItemsControl>
+    </ScrollViewer>
         
     
 </UserControl>
