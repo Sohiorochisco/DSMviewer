@@ -9,7 +9,8 @@
     <ItemsControl ItemsSource="{Binding IconList}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Image ToolTip="{Binding Description}" Width="50">
+                <Image ToolTip="{Binding Description}" Width="50"
+                       MouseLeftButtonUp="ChangeState">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding Icon}" 
                                      DecodePixelWidth="50"/>

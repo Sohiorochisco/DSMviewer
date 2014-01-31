@@ -71,5 +71,11 @@ namespace DSMviewer
         {
             SideDisplay.Content = control;
         }
+
+        private void NewDSSScript(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }

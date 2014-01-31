@@ -44,6 +44,15 @@ namespace DSMviewer
         public int GridWidthMax { get { return 50 * Width + 5; } }
 
         /// <summary>
+        /// Returns a Uri corresponding to the icon for a given object name
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        static public Uri GetObjectImage(string n){
+            return IconGetter.Instance.RetrieveIcon(n);
+        }
+
+        /// <summary>
         /// Generates the backing collection for the location view.
         /// </summary>
         /// <param name="w"></param>
@@ -126,10 +135,6 @@ namespace DSMviewer
                     icon.BackingObject = refs[y, x];
                     getter.AddIcon(icns[y, x]);
                     icon.Icon = getter.RetrieveIcon(icns[y, x]);
-                    if (icon.BackingObject != null){
-                        icon.Description = String.Format
-                            ("Displayed object: {0} {1}", icon.BackingObject.Type, icon.BackingObject.Name);
-                    }
                     iconList.Add(icon);
                 }
             }
@@ -265,6 +270,12 @@ namespace DSMviewer
                 return;
             }
             public Uri RetrieveIcon(string iconName){
+                if (!icons.ContainsKey(iconName))
+                {
+                    var iconUri = String.Format("..\\..\\..\\..\\icons\\{0}.png", iconName);
+                    var iconAbsUri = System.IO.Path.GetFullPath(iconUri);
+                    icons[iconName] = new Uri(@iconAbsUri, UriKind.Absolute);
+                }
                 return icons[iconName];
             }
 

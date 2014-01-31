@@ -36,7 +36,15 @@ namespace DSMviewer
 
     public class LocationIcon
     {
-        public string Description { get; set; }
+        public string Description {
+            get {
+                if (BackingObject != null){
+                    return String.Format("{0} {1}", BackingObject.Type, BackingObject.Name);
+                }else{
+                    return "";
+                }
+            }
+        }
         public Uri Icon { get; set; }
         public IdentifiedObject BackingObject { get; set; }
     }

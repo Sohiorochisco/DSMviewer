@@ -18,12 +18,26 @@ namespace DSMviewer
     /// <summary>
     /// Interaction logic for LocationDisplay.xaml
     /// </summary>
-    public partial class LocationDisplay : UserControl
-    {
-        public LocationDisplay(SchematicMaker sm)
-        {
+    public partial class LocationDisplay : UserControl{
+        public LocationDisplay(SchematicMaker sm){
             DataContext = sm;
             InitializeComponent();
+        }
+
+        private void ChangeState(object sender, MouseButtonEventArgs e){
+            var im = (Image)sender;
+            var li = (LocationIcon)im.DataContext;
+            if (li.BackingObject == null){
+                return;
+            }
+            var bo = (Equipment)li.BackingObject;
+            if(bo.EquipmentType == EquipmentTopoTypes.Switch){
+                Switch s = (Switch)bo;
+                s.SwitchState = (s.SwitchState == SwitchState.closed)? SwitchState.open : SwitchState.closed;
+                string icn = String.Format("Switch{0}",s.State());
+                li.Icon = SchematicMaker.GetObjectImage(icn);
+            }
+            return;
         }
     }
 }
